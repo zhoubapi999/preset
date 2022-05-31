@@ -12,6 +12,7 @@ import UniProvider from './build/vite-plugin-uni-provider'
 import Espower from './build/vite-plugin-espower'
 import Define from './build/vite-plugin-define'
 import { visualizer } from 'rollup-plugin-visualizer'
+import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 
 import ImportsConfig from './build/imports.config'
 
@@ -37,6 +38,7 @@ export default defineConfig({
     isTest() && Espower(),
     Define(), //添加一些全局变量
     visualizer(), //可视化依赖关系
+    VueSetupExtend(), // setup 组件名称注入
   ],
   esbuild: { keepNames: true },
   optimizeDeps: { exclude: ['lodash-es'] },
