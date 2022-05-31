@@ -1,30 +1,57 @@
 <template>
-  <meta title="主页" title:微信="微信端主页" />
-  <div flex-center-col pt100>
-    <div text-4xl py-25>
-      <div class="icon" i-ri-leaf-fill inline-block></div>
-    </div>
-    <p>
-      <em text-sm opacity-75>快速，优雅的全栈预设模板</em>
-    </p>
-    <div py-25>
-      <uni-easyinput v-model="name" placeholder="你的名字?" />
-    </div>
-    <!-- ↓这里可以直接使用app -->
-    <div @click="app.User.handleClick">reverse: {{ app.User.reverseName }}</div>
-    <div py-25>
-      <div pxlg pysm text-white bg-gradient-to-br from-hex-f093fb to-hex-f5576c @click="sayHi">
-        开冲
-      </div>
-    </div>
-    <p text-sm opacity-75>打开F12进入移动端视图</p>
-    <p text-sm opacity-75>向下滑动体验下拉刷新</p>
-  </div>
+  <meta title="主页" title:微信="微信端主页" navigationStyle="custom" />
+  <HdCard :config="config"></HdCard>
 </template>
 
 <script setup lang="ts">
+import HdCard from '@/components/hdui/HdCard.vue'
 // 可以用ref语法糖解构store
 const { name } = $(app.User)
+const config = ref({
+  name: 'card',
+  alias: '卡面组件',
+  isBlock: true,
+  showUsername: true,
+  showPhone: true,
+  showPortrait: true,
+  btnText: '领取会员卡',
+  style: {
+    color: '#fff',
+    btnColor: '#000',
+    btnBg: '',
+    btnFontSize: 20,
+    zIndex: 0,
+    mgT: 0,
+    mgB: 0,
+    mgL: 0,
+    mgR: 0,
+    pdT: 15,
+    pdB: 15,
+    pdL: 15,
+    pdR: 15,
+    bgImg:
+      'https://vipcard-1252869181.cos.ap-guangzhou.myqcloud.com/2020/11/16/016afbe21f54e0e55d52d1e5be131109.png',
+    radius: 4,
+    noSize: 16,
+    iconSize: 50,
+    iconRadius: 25,
+    noAlign: 'right',
+    noCardNum: true,
+    shadow: {
+      x: 0,
+      y: 0,
+      radius: 0,
+      color: 'transparent',
+    },
+    btnShadow: {
+      x: 0,
+      y: 0,
+      radius: 0,
+      color: 'transparent',
+    },
+  },
+  hide: false,
+})
 
 function sayHi() {
   app
@@ -45,7 +72,7 @@ useScroll(onPageScroll).onLoad(page => {
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .icon {
   background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
 }
