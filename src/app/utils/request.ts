@@ -11,13 +11,13 @@ interface Option {
   loading?: boolean
 }
 
-interface Response {
+interface Response<T = any> {
   code: number
   msg: string
-  data: object
+  data: T
 }
 
-const request = (obj: Option) => {
+function request<T = Response>(obj: Option): Promise<T> {
   obj.url = obj.url || ''
   obj.method = obj.method || 'GET'
   obj.data = obj.data || {}
@@ -44,9 +44,9 @@ const request = (obj: Option) => {
       },
       success: res => {
         // 服务器成功返回的回调函数
-        let data: Response = res.data
+        let data = res.data
         if (data.code === 200) {
-          return resolve(data.data)
+          return resolve(data)
         } else {
           uni.showModal({
             title: '提示',
