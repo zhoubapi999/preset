@@ -2,6 +2,9 @@ const base_url = {
   PROD: '', // 生产环境地址
   DEV: 'https://one.vipcard.shop/addons/vip_card/', // 开发环境地址
 }
+//#ifdef H5
+if (process.env.NODE_ENV === 'development') base_url.DEV = '/api/'
+//#endif
 
 interface Option {
   url: string

@@ -26,7 +26,17 @@ export default defineConfig({
       lodash: 'lodash-es',
     },
   },
-  server: { watch: { ignored: ['**/dist/**'] } },
+  server: {
+    watch: { ignored: ['**/dist/**'] },
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'https://one.vipcard.shop/addons/vip_card/',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, ''), // 不可以省略rewrite
+      },
+    },
+  },
   plugins: [
     Inspect(), //vite分析工具
     UniMeta(), //自动生成页面meta信息和路由并注册pages.json
