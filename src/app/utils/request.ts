@@ -21,9 +21,16 @@ interface Response<T = any> {
 }
 
 function request<T = Response>(obj: Option): Promise<T> {
+  let { userInfo, shopInfo, loginInfo } = app.User
   obj.url = obj.url || ''
   obj.method = obj.method || 'GET'
-  obj.data = obj.data || {}
+  obj.data = {
+    ...loginInfo,
+    ...obj.data,
+    uid: userInfo.id,
+    appid: userInfo.appid,
+    shop_id: shopInfo.id,
+  }
   obj.header = obj.header || 'application/json'
   obj.loading = obj.loading !== false
   let token = '' // 登录获得的 token
@@ -48,7 +55,7 @@ function request<T = Response>(obj: Option): Promise<T> {
       success: res => {
         // 服务器成功返回的回调函数
         let data = res.data
-        if (data.code === 200) {
+        if (data.code === 200 || data.errno === 0) {
           return resolve(data)
         } else {
           uni.showModal({

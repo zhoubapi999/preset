@@ -1,14 +1,9 @@
 <script setup lang="ts">
-onLaunch(() => {
-  console.log('App Launch')
-})
+onLaunch(() => {})
 onShow(() => {
-  console.log('App Show')
+  // 登录
+  app.User.login()
 })
-onHide(() => {
-  console.log('App Hide')
-})
-console.log(__filename)
 </script>
 <style lang="scss">
 // #ifndef APP-NVUE
