@@ -1,6 +1,8 @@
+import initJson from '@/app/config'
+import { pickBy, isNil } from 'lodash'
 const base_url = {
-  PROD: '', // 生产环境地址
-  DEV: 'https://one.vipcard.shop/addons/vip_card/', // 开发环境地址
+  PROD: `https://${initJson.siteroot}/addons/vip_card/`, // 生产环境地址
+  DEV: `https://${initJson.siteroot}/addons/vip_card/`, // 开发环境地址
 }
 //#ifdef H5
 if (process.env.NODE_ENV === 'development') base_url.DEV = '/api/'
@@ -23,14 +25,22 @@ interface Response<T = any> {
 function request<T = Response>(obj: Option): Promise<T> {
   let { userInfo, shopInfo, loginInfo } = app.User
   obj.url = obj.url || ''
-  obj.method = obj.method || 'GET'
-  obj.data = {
-    ...loginInfo,
-    ...obj.data,
-    uid: userInfo.id,
-    appid: userInfo.appid,
-    shop_id: shopInfo.id,
-  }
+  obj.method = obj.method || 'POST'
+  // 去除null undefined
+  obj.data = pickBy(
+    {
+      ...loginInfo,
+      ...obj.data,
+      uid: userInfo.id,
+      appid: userInfo.appid,
+      shop_id: shopInfo.id,
+      uniacid: initJson.uniacid,
+      i: obj.method === 'GET' ? initJson.uniacid : null,
+    },
+    val => {
+      return !isNil(val)
+    },
+  )
   obj.header = obj.header || 'application/json'
   obj.loading = obj.loading !== false
   let token = '' // 登录获得的 token

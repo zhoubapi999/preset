@@ -22,6 +22,12 @@ export class User extends Pinia {
     appid: 0,
   }
 
+  @Persist
+  allData = {
+    shop_info: {} as any,
+    my_card_info: {} as any,
+  }
+
   // 获取登录信息
   async getLoginInfo() {
     return new Promise(resolve => {
@@ -30,11 +36,12 @@ export class User extends Pinia {
           return app
             .request({
               url: '../../web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=login_auto',
+              method: 'GET',
               data: {
                 code: res.code,
                 login_num: 1,
                 i: 1904190010,
-                uniacid: '1904190010',
+
                 vip_timestamp: '1654653465897',
                 _sign: 'ad4470fc43660dd6bc36c7022447bfd2',
               },
@@ -65,7 +72,8 @@ export class User extends Pinia {
     }
 
     await this.getShopInfo()
-    await this.getUserInfo()
+    this.getUserInfo()
+    this.getAllData()
   }
 
   // 门店信息
@@ -74,7 +82,6 @@ export class User extends Pinia {
       .request({
         url: 'a/api/index.php?s=/miniapp/shop/get_shop_data',
         data: {
-          uniacid: 1904190010,
           cardmanage: true,
           condensation_code: '',
           cardmanage_fields: 'other_config_v2,op_card_bg',
@@ -90,13 +97,23 @@ export class User extends Pinia {
     return app
       .request({
         url: '../../web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=login',
-        data: {
-          i: 1904190010,
-          uniacid: '1904190010',
-        },
+        method: 'GET',
+        data: {},
       })
       .then(res => {
         this.userInfo = res.data
+      })
+  }
+
+  async getAllData() {
+    return app
+      .request({
+        url: '../../web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=index',
+        method: 'GET',
+        data: {},
+      })
+      .then(res => {
+        this.allData = res.data
       })
   }
 }

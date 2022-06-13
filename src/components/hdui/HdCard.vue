@@ -2,6 +2,7 @@
 const props = defineProps({
   config: { type: Object, required: true },
 })
+const { allData } = $(app.User)
 const noStyle = computed(() => {
   const { style } = props.config
   return {
@@ -17,6 +18,7 @@ const iconStyle = computed(() => {
     width: `${style.iconSize}px`,
     height: `${style.iconSize}px`,
     borderRadius: `${style.iconRadius}px`,
+    backgroundImage: `url(${allData.my_card_info.header_url})`,
   }
 })
 
@@ -48,8 +50,10 @@ const style = computed(() => {
       <div class="user-info">
         <div v-if="config.showPortrait" class="portrait" :style="iconStyle"></div>
         <div class="user-detail">
-          <div v-if="config.showUsername" class="username">会员名字</div>
-          <div v-if="config.showPhone" class="userphone">会员手机号</div>
+          <div v-if="config.showUsername" class="username">
+            {{ allData.my_card_info.realname || allData.my_card_info.nickname }}
+          </div>
+          <div v-if="config.showPhone" class="userphone">{{ allData.my_card_info.tel }}</div>
         </div>
         <div class="icon">
           <div
@@ -69,7 +73,7 @@ const style = computed(() => {
         </div>
       </div>
     </div>
-    <div class="card-no" :style="noStyle">2020031605052535</div>
+    <div class="card-no" :style="noStyle">{{ allData.my_card_info.card_num }}</div>
   </div>
 </template>
 

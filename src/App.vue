@@ -1,6 +1,11 @@
 <script setup lang="ts">
 onLaunch(() => {})
-onShow(() => {
+onShow(opt => {
+  // 门店id
+  if (opt.query.shop_id) {
+    app.User.shopInfo.id = Number(opt.query.shop_id)
+  }
+
   // 登录
   app.User.login()
 })
