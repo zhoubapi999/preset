@@ -14,6 +14,7 @@ export class User extends Pinia {
   @Persist
   shopInfo = {
     id: 0,
+    groupid: 0,
   }
 
   @Persist

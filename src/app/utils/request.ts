@@ -34,6 +34,7 @@ function request<T = Response>(obj: Option): Promise<T> {
       uid: userInfo.id,
       appid: userInfo.appid,
       shop_id: shopInfo.id,
+      groupid: shopInfo.groupid,
       uniacid: initJson.uniacid,
       i: obj.method === 'GET' ? initJson.uniacid : null,
     },
