@@ -1,7 +1,6 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import path from 'path'
-
 import uni from '@dcloudio/vite-plugin-uni'
 import ViteRestart from 'vite-plugin-restart'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -13,7 +12,7 @@ import Espower from './build/vite-plugin-espower'
 import Define from './build/vite-plugin-define'
 import { visualizer } from 'rollup-plugin-visualizer'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
-
+import AwaitOnlaunch from 'vite-uni-await-onlaunch'
 import ImportsConfig from './build/imports.config'
 
 // https://vitejs.dev/config/
@@ -49,6 +48,11 @@ export default defineConfig({
     Define(), //添加一些全局变量
     visualizer(), //可视化依赖关系
     VueSetupExtend(), // setup 组件名称注入
+    AwaitOnlaunch({
+      fn: () => {
+        return app.User.getShopInfo()
+      },
+    }),
   ],
   esbuild: { keepNames: true },
   optimizeDeps: { exclude: ['lodash-es'] },
