@@ -7,7 +7,7 @@ import { merge, transform, isObject } from 'lodash'
 import normallize from 'normalize-path'
 import AppConfig from '../src/app.config'
 
-export const defaultPagesRE = /src[\/\\]pages[\/\\]((?!.+(component(s)?|static).+).)*\.vue$/
+export const defaultPagesRE = /src[\/\\]vip_card[\/\\]((?!.+(component(s)?|static).+).)*\.vue$/
 export const defaultMetaRE = /\<meta(.|\s)*?(\/\>|\/meta\>)/im
 export function MetaParser(str, alias, preset): Record<string, any> {
   let attr
@@ -46,14 +46,14 @@ export default function (options: Partial<Options> = {}) {
   let {
     pagesRE = defaultPagesRE,
     metaRE = defaultMetaRE,
-    pagesBasePath = 'src/pages',
+    pagesBasePath = 'src/vip_card',
     alias = {},
     pluginName = 'uni-meta',
     DEBUG = process.env.DEBUG,
   } = options
 
   alias = {
-    微信: 'mp-weixin',
+    wx: 'mp-weixin',
     app: 'app-plus',
 
     title: 'navigationBarTitleText',
@@ -70,7 +70,7 @@ export default function (options: Partial<Options> = {}) {
     )
     debug(`pageMeta:`, pageMeta)
 
-    const basePath = 'pages'
+    const basePath = 'vip_card'
     const META = {
       pages: [],
       subPackages: [],
@@ -80,9 +80,9 @@ export default function (options: Partial<Options> = {}) {
       style = JSON.parse(style)
       let [packageName, ...pageName]: any = path.split('/')
       pageName = pageName.join('/')
-      if (packageName == 'index') {
+      if (packageName == 'main') {
         //主包
-        META['pages'][pageName == 'index' || pageName == '_index' ? 'unshift' : 'push']({
+        META['pages'][pageName == 'index/index' || pageName == '_index' ? 'unshift' : 'push']({
           path: [basePath, packageName, pageName].join('/'),
           style,
         })

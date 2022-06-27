@@ -49,8 +49,9 @@ export default defineConfig({
     visualizer(), //可视化依赖关系
     VueSetupExtend(), // setup 组件名称注入
     AwaitOnlaunch({
+      pagesRE: /src[\/\\]vip_card[\/\\]((?!.+(component(s)?|static).+).)*\.vue$/,
       fn: () => {
-        return app.User.getShopInfo()
+        return app.User.checkLogin()
       },
     }),
   ],

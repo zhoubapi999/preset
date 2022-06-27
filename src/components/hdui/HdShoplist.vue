@@ -1,18 +1,10 @@
-<script lang="ts" setup name="HdShoplist">
+<script lang="ts" setup>
 const props = defineProps({
   config: { type: Object, required: true },
 })
 
-const shopList = computed(() => {
-  const { shopType, items } = props.config
-  if (shopType == 'near') {
-    return items.slice(0, 5)
-  } else if (items.length > 0) {
-    return [items[0]]
-  }
-
-  return []
-})
+const { shopInfo: shop } = $(app.User)
+const { shopList } = $(app.Shop)
 
 const style = computed(() => {
   const { style } = props.config
@@ -33,46 +25,80 @@ const style = computed(() => {
         : '',
   }
 })
+
+const iconStyle = computed(() => {
+  return function (url: string) {
+    const { style } = props.config
+    const width = `${style.iconSize || 50}px`
+    return {
+      backgroundImage: 'url(' + url + ')',
+      height: width,
+      width: width,
+      minWidth: width,
+    }
+  }
+})
 </script>
 
 <template>
-  <div class="hdshop-container" :style="style">
+  <div class="hdshop-container" :class="config.style.itemDir" :style="style">
     <div v-if="config.title && config.shopType == 'near'" class="block-header">
       <div class="block-title">{{ config.title }}</div>
       <div class="block-sub-title">{{ config.subTitle }}</div>
     </div>
     <div class="shop-list-body">
+      <!-- 附近门店 -->
+      <div v-if="config.shopType == 'near'">
+        <div
+          v-for="(item, index) in shopList"
+          :key="index"
+          class="shop-item"
+          :style="{
+            margin: config.style.itemMg + 'px 0',
+            padding: config.style.itemMg + 'px 0',
+            width: config.style.itemWidth + 'px',
+          }"
+        >
+          <div class="shop-icon" :style="iconStyle(item.pic_url)"></div>
+          <div class="shop-info">
+            <div class="shop-title">{{ item.name }}</div>
+            <div v-if="item.address && !config.hideAddress" class="shop-sub-title">
+              {{ item.address }}
+            </div>
+          </div>
+          <div v-if="shop.id == item.id" class="i-ic-round-star"></div>
+          <div class="icon i-ic-round-arrow-forward-ios"></div>
+        </div>
+      </div>
+      <!-- 当前门店 -->
       <div
-        v-for="(it, i) in shopList"
-        :key="i"
+        v-if="config.shopType != 'near'"
         class="shop-item"
+        bindtap="goShop"
         :style="{
-          margin: `${config.style.itemMg}px 0`,
-          padding: `${config.style.itemMg}px 0`,
-          fontSize: config.style.itemFontSize + 'px',
+          margin: config.style.itemMg + 'px 0',
+          padding: config.style.itemMg + 'px 0',
+          width: config.style.itemWidth + 'px',
         }"
       >
-        <div
-          class="shop-icon"
-          :style="{
-            backgroundImage: 'url(' + it.pic_url + ')',
-            height: `${config.style.iconSize || 50}px`,
-            width: `${config.style.iconSize || 50}px`,
-            minWidth: `${config.style.iconSize || 50}px`,
-          }"
-        ></div>
+        <div class="shop-icon" :style="iconStyle(shop.pic_url)"></div>
         <div class="shop-info">
-          <div class="shop-title">{{ it.name }}</div>
-          <div v-if="!config.hideAddress" class="shop-sub-title">{{ it.address }}</div>
+          <div class="shop-title">{{ shop.name }}</div>
+          <div v-if="shop.address && !config.hideAddress" class="shop-sub-title">
+            {{ shop.address }}
+          </div>
         </div>
+        <div class="icon i-ic-round-arrow-forward-ios"></div>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+@import '@/styles/uiblock.scss';
 .hdshop-container {
   .shop-item {
+    display: flex;
     flex-direction: row;
     align-items: center;
     margin: 0 !important;
@@ -81,60 +107,35 @@ const style = computed(() => {
       border-bottom: 1px solid rgba(125, 125, 125, 0.5);
     }
 
-    background-image: url(../../../../assets/images/arrow-left.svg);
     background-size: 14px;
     background-repeat: no-repeat;
     background-position: right center;
-  }
-
-  .shop-icon {
-    margin-right: 12px;
-  }
-  .shop-sub-title {
-    margin-top: 0.3em;
-  }
-
-  .shop-item {
-    display: flex;
-
     .shop-icon {
+      margin-right: 12px;
       background-repeat: no-repeat;
       background-position: center;
       background-size: contain;
     }
-    .shop-sub-title {
-      font-size: 0.7em;
-      color: #aaa;
+    .shop-info {
+      flex: 1;
+      padding-right: 80rpx;
+      .shop-sub-title {
+        margin-top: 0.3em;
+        font-size: 0.7em;
+        color: #aaa;
+      }
     }
+  }
+
+  .icon {
+    margin-left: auto;
+    color: #999;
   }
 }
 
-.block-header {
-  margin-bottom: 10px;
-  display: flex;
-  line-height: 1em;
-  padding-bottom: 10px;
-  position: relative;
-  cursor: move;
-  &:after {
-    content: '';
-    display: block;
-    background: #ccc;
-    height: 1px;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    transform: scaleY(0.5);
-    position: absolute;
-  }
-
-  .block-title {
-    font-size: 16px;
-    margin-right: 0.6em;
-  }
-  .block-sub-title {
-    font-size: 12px;
-    opacity: 0.5;
-  }
+.i-ic-round-star {
+  color: #fcbe40;
+  font-size: 50rpx;
+  margin: 0 10rpx;
 }
 </style>

@@ -1,0 +1,28 @@
+.block-header {
+  margin-bottom: 10px;
+  display: flex;
+  line-height: 1em;
+  padding-bottom: 10px;
+  position: relative;
+  cursor: move;
+  &:after {
+    content: '';
+    display: block;
+    background: #ccc;
+    height: 1px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    transform: scaleY(0.5);
+    position: absolute;
+  }
+
+  .block-title {
+    font-size: 16px;
+    margin-right: 0.6em;
+  }
+  .block-sub-title {
+    font-size: 12px;
+    opacity: 0.5;
+  }
+}

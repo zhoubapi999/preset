@@ -15,18 +15,25 @@ export class User extends Pinia {
   shopInfo = {
     id: 0,
     groupid: 0,
+    name: '',
+    address: '',
+    pic_url: '',
   }
 
   @Persist
   userInfo = {
     id: 0,
     appid: 0,
+    mini_app: {} as any,
   }
 
   @Persist
   allData = {
     shop_info: {} as any,
     my_card_info: {} as any,
+    setting: {} as any,
+    banner_list: [],
+    index_box: [],
   }
 
   // 获取登录信息
@@ -40,11 +47,6 @@ export class User extends Pinia {
               method: 'GET',
               data: {
                 code: res.code,
-                login_num: 1,
-                i: 1904190010,
-
-                vip_timestamp: '1654653465897',
-                _sign: 'ad4470fc43660dd6bc36c7022447bfd2',
               },
             })
             .then(res => {
@@ -75,6 +77,7 @@ export class User extends Pinia {
     await this.getShopInfo()
     this.getUserInfo()
     this.getAllData()
+    app.Shop.getShopList()
   }
 
   // 门店信息
@@ -116,5 +119,16 @@ export class User extends Pinia {
       .then(res => {
         this.allData = res.data
       })
+  }
+
+  checkLogin() {
+    return new Promise(resolve => {
+      let int = setInterval(() => {
+        if (this.userInfo.id > 0) {
+          clearInterval(int)
+          resolve(true)
+        }
+      }, 200)
+    })
   }
 }

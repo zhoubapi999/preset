@@ -42,7 +42,7 @@ function request<T = Response>(obj: Option): Promise<T> {
       return !isNil(val)
     },
   )
-  obj.header = obj.header || 'application/json'
+  obj.header = obj.header || 'application/x-www-form-urlencoded'
   obj.loading = obj.loading !== false
   let token = '' // 登录获得的 token
   let loadingStatus = true

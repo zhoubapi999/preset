@@ -1,24 +1,29 @@
-<script lang="ts" setup name="Hdcard">
+<script lang="ts" setup>
 const props = defineProps({
   config: { type: Object, required: true },
 })
-const { allData } = $(app.User)
+const { allData, userInfo } = $(app.User)
+const defaultPortrait = ref('')
+const tempWechatUser = ref({})
 const noStyle = computed(() => {
   const { style } = props.config
   return {
-    top: `${+(style.pdB || 0) - 5}px`,
+    top: `${(2 * style.pdB || 0) - style.noSize}rpx`,
     textAlign: style.noAlign,
-    fontSize: style.noSize + 'px',
+    fontSize: 2 * style.noSize + 'rpx',
     display: style.noCardNum ? 'block' : 'none',
   }
 })
 const iconStyle = computed(() => {
   const { style } = props.config
   return {
-    width: `${style.iconSize}px`,
-    height: `${style.iconSize}px`,
-    borderRadius: `${style.iconRadius}px`,
-    backgroundImage: `url(${allData.my_card_info.header_url})`,
+    width: `${2 * style.iconSize}rpx`,
+    height: `${2 * style.iconSize}rpx`,
+    borderRadius: `${2 * style.iconRadius}rpx`,
+    backgroundImage:
+      'url(' +
+      (allData.my_card_info.header_url || tempWechatUser.avatarUrl || defaultPortrait) +
+      ')',
   }
 })
 
@@ -26,54 +31,86 @@ const style = computed(() => {
   const { style } = props.config
   return {
     color: style.color,
-    marginLeft: `${style.mgL || 0}px`,
-    marginRight: `${style.mgR || 0}px`,
-    marginTop: `${style.mgT || 0}px`,
-    marginBottom: `${style.mgB || 0}px`,
-    paddingLeft: `${style.pdL || 0}px`,
-    paddingRight: `${style.pdR || 0}px`,
-    paddingTop: `${style.pdT || 0}px`,
-    paddingBottom: `${style.pdB || 0}px`,
-    backgroundImage: `url(${style.bgImg ? style.bgImg : 'images/components/img2.png'})`,
-    borderRadius: `${style.radius}px`,
-    boxShadow:
-      style.shadow && style.shadow.radius && style.shadow.color
-        ? `${style.shadow.x}px ${style.shadow.y}px ${style.shadow.radius}px ${style.shadow.color}`
-        : '',
+    marginLeft: `${2 * style.mgL || 0}rpx`,
+    marginRight: `${2 * style.mgR || 0}rpx`,
+    marginTop: `${2 * style.mgT || 0}rpx`,
+    marginBottom: `${2 * style.mgB || 0}rpx`,
+    paddingLeft: `${2 * style.pdL || 0}rpx`,
+    paddingRight: `${2 * style.pdR || 0}rpx`,
+    paddingTop: `${2 * style.pdT || 0}rpx`,
+    paddingBottom: `${2 * style.pdB || 0}rpx`,
+    backgroundImage: `url(${style.bgImg || userInfo.mini_app.card_bg})`,
+    backgroundSize: style.bgSize,
+    borderRadius: `${2 * style.radius}rpx`,
+    boxShadow: style.shadow
+      ? `${2 * style.shadow.x}rpx ${2 * style.shadow.y}rpx ${2 * style.shadow.radius}rpx ${
+          style.shadow.color
+        }`
+      : '',
   }
 })
+
+const btnStyle = computed(() => {
+  const { style } = props.config
+  return {
+    color: style.btnColor,
+    fontSize: `${
+      2 * (allData.my_card_info.card_num ? Number(style.btnFontSize) + 6 : style.btnFontSize)
+    }rpx`,
+    background: style.btnBg,
+    boxShadow: style.btnShadow
+      ? `${2 * style.btnShadow.x}rpx ${2 * style.btnShadow.y}rpx ${2 * style.btnShadow.radius}rpx ${
+          style.btnShadow.color
+        }`
+      : '',
+  }
+})
+
+function action(item) {
+  console.log(toRaw(item))
+}
 </script>
 
 <template>
-  <div class="card-container card-cover pt100" :style="style">
+  <div class="card-container card-cover" :style="style" bindtap="goUserInfo">
+    <div catchtap="onGotUserInfo">
+      <button v-if="!allData.my_card_info.card_num" class="btn-mask"></button>
+    </div>
     <div style="flex: 1">
       <div class="user-info">
         <div v-if="config.showPortrait" class="portrait" :style="iconStyle"></div>
         <div class="user-detail">
           <div v-if="config.showUsername" class="username">
-            {{ allData.my_card_info.realname || allData.my_card_info.nickname }}
+            {{
+              allData.my_card_info.realname ||
+              allData.my_card_info.nickname ||
+              tempWechatUser.nickName
+            }}
           </div>
-          <div v-if="config.showPhone" class="userphone">{{ allData.my_card_info.tel }}</div>
+          <div v-if="config.showPhone && allData.my_card_info.card_num" class="userphone">
+            {{ allData.my_card_info.tel }}
+          </div>
+          <div v-if="!allData.my_card_info.card_num && !tempWechatUser" class="userphone">
+            <text v-if="!allData.my_card_info.nickname">登录</text>
+          </div>
         </div>
         <div class="icon">
           <div
-            :style="{
-              color: config.style.btnColor,
-              background: config.style.btnBg,
-              fontSize: config.style.btnFontSize + 'px',
-              boxShadow:
-                config.style.btnShadow &&
-                config.style.btnShadow.radius &&
-                config.style.btnShadow.color
-                  ? `${config.style.btnShadow.x}px ${config.style.btnShadow.y}px ${config.style.btnShadow.radius}px ${config.style.btnShadow.color}`
-                  : '',
-            }"
-            class="qrcode i-ic-baseline-qrcode"
+            v-if="allData.my_card_info.card_num"
+            class="btn i-ic-baseline-qrcode"
+            :style="btnStyle"
+            @click.stop="action({})"
           ></div>
+          <div v-if="!allData.my_card_info.card_num" class="btn open-card-btn" :style="btnStyle">
+            {{ config.btnText || '领取会员卡' }}
+          </div>
         </div>
       </div>
     </div>
-    <div class="card-no" :style="noStyle">{{ allData.my_card_info.card_num }}</div>
+
+    <div v-if="allData.my_card_info.card_num || config.fixedNo" class="card-no" :style="noStyle">
+      {{ allData.my_card_info.card_num }}
+    </div>
   </div>
 </template>
 

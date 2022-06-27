@@ -22,6 +22,7 @@ export interface UIOption {
       radius?: number
       shadow?: { x?: number; y?: number; radius?: number; color?: string }
       zIndex?: number
+      bgImg?: string
     }
     subTitle?: string
     title?: string
@@ -33,4 +34,5 @@ export interface UIOption {
   pageBg: string
   pageBgImg: string
   title: string
+  showFooter: boolean
 }
