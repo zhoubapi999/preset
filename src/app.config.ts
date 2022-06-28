@@ -10,6 +10,7 @@ export default {
       custom: {
         '^sys$': '@/sys.vue',
         '^uni-(.*)': '@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue',
+        '^Hd(.*)': '@/components/hdui/Hd$1.vue',
       },
     },
   },

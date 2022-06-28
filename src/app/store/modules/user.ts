@@ -25,6 +25,7 @@ export class User extends Pinia {
     id: 0,
     appid: 0,
     mini_app: {} as any,
+    custom_fields: {} as any,
   }
 
   @Persist
@@ -34,7 +35,8 @@ export class User extends Pinia {
     setting: {} as any,
     banner_list: [],
     index_box: [],
-  }
+    new_levelinfo: {},
+  } as any
 
   // 获取登录信息
   async getLoginInfo() {

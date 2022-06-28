@@ -1,7 +1,10 @@
 <script lang="ts" setup>
+import { ConfigOption } from '@/types'
+import { PropType } from 'vue'
 const props = defineProps({
-  config: { type: Object, required: true },
+  config: { type: Object as PropType<ConfigOption>, required: true },
 })
+
 const { allData, userInfo } = $(app.User)
 const defaultPortrait = ref('')
 const tempWechatUser = ref({})

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import { ConfigOption } from '@/types'
+import { PropType } from 'vue'
 const props = defineProps({
-  config: { type: Object, required: true },
+  config: { type: Object as PropType<ConfigOption>, required: true },
 })
 
 const { allData } = $(app.User)
@@ -30,7 +32,7 @@ function action(item) {
 </script>
 
 <template>
-  <div class="bottom-nav-container" :style="style">
+  <div v-if="config && config.items.length" class="bottom-nav-container" :style="style">
     <div
       v-for="(item, index) in config.items"
       :key="index"

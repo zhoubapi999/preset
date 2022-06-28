@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import { ConfigOption } from '@/types'
+import { PropType } from 'vue'
 const props = defineProps({
-  config: { type: Object, required: true },
+  config: { type: Object as PropType<ConfigOption>, required: true },
 })
 
 const style = computed(() => {

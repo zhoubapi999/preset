@@ -1,5 +1,4 @@
 import espower from 'espower-source'
-import path from 'path'
 
 export default function (options = {} as any) {
   let { pluginName = 'espower', DEBUG = process.env.DEBUG } = options

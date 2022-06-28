@@ -1,30 +1,61 @@
 <template>
   <meta title="主页" title:wx="微信端主页" navigationStyle="custom" />
-  <div
-    class="page-container"
-    :class="{ opencard: showIndex, 'has-bottomnav': uiData.showFooter }"
-    style="background:{{ui.pageBg}};background-image:url({{ui.pageBgImg}});background-size:{{ui.bgSize}}"
-  >
-    <div v-for="(u, index) in uiData.components" :key="index" class="page-item">
-      <HdSwiper v-if="u.name === 'swiper'" :config="u"></HdSwiper>
-      <HdCard v-if="u.name === 'card'" :config="u"></HdCard>
-      <HdShoplist v-if="u.name === 'shoplist'" :config="u"></HdShoplist>
-      <HdCube v-if="u.name === 'cube'" :config="u"></HdCube>
-      <HdBottomNav v-if="u.name === 'bottomNav'" :config="u" class="bottomnav"></HdBottomNav>
+  <div class="container">
+    <uni-nav-bar
+      v-if="!uiData.hideTitle"
+      :background-color="uiData.headerBg"
+      :color="uiData.headerColor"
+      status-bar
+      :border="false"
+    >
+      <div class="title">{{ uiData.title }}</div>
+    </uni-nav-bar>
+    <div
+      v-if="uiData.openCardDialog !== false && !uiData.showIndex"
+      class="page-container"
+      :class="{ opencard: uiData.showIndex, 'has-bottomnav': uiData.showFooter }"
+      :style="{
+        background: uiData.pageBg,
+        backgroundImage: 'url(' + uiData.pageBgImg + ')',
+        backgroundSize: uiData.bgSize,
+      }"
+    >
+      <div v-for="(u, index) in uiData.components" :key="index" class="page-item">
+        <HdNotice v-if="u.name === 'notice'" :config="u"></HdNotice>
+        <HdSwiper v-if="u.name === 'swiper'" :config="u"></HdSwiper>
+        <HdCard v-if="u.name === 'card'" :config="u"></HdCard>
+        <HdShoplist v-if="u.name === 'shoplist'" :config="u"></HdShoplist>
+        <HdCube v-if="u.name === 'cube'" :config="u"></HdCube>
+        <HdMemberInfo v-if="u.name === 'memberInfo'" :config="u"></HdMemberInfo>
+        <HdBottomlink v-if="u.name === 'hdbottomlink'" :config="u"></HdBottomlink>
+        <HdCopyRight
+          v-if="u.name === 'copyright' && allData.setting.technical"
+          :config="u"
+        ></HdCopyRight>
+        <HdImage v-if="u.name === 'image'" :config="u"></HdImage>
+        <HdVideo v-if="u.name === 'video'" :config="u"></HdVideo>
+        <HdProduct v-if="u.name === 'product'" :config="u"></HdProduct>
+        <HdProduct1 v-if="u.name === 'product1'" :config="u" :pagedata="uiData"></HdProduct1>
+        <HdProduct2 v-if="u.name === 'product2'" :config="u" :pagedata="uiData"></HdProduct2>
+      </div>
+      <div
+        v-if="uiData.showIndex && !uiData.hideIndex"
+        class="opencard-bg"
+        :style="{ backgroundImage: 'url(' + uiData.opencardbg + ')' }"
+      ></div>
     </div>
+    <HdBottomNav v-if="bottomnav && !uiData.showIndex" :config="bottomnav"></HdBottomNav>
+    <!-- 旧导航栏 -->
+    <HdOldBottomNav v-if="uiData.showFooter && !uiData.showIndex"></HdOldBottomNav>
   </div>
 </template>
 
 <script setup lang="ts">
-import HdCard from '@/components/hdui/HdCard.vue'
-import HdShoplist from '@/components/hdui/HdShoplist.vue'
-import HdCube from '@/components/hdui/HdCube.vue'
-import HdSwiper from '@/components/hdui/HdSwiper.vue'
-import HdBottomNav from '@/components/hdui/HdBottomNav.vue'
 import { UIOption } from '@/types'
+import HdMemberInfo from '../../../components/hdui/HdMemberInfo.vue'
+import HdCopyRight from '@/components/hdui/HdCopyRight.vue'
 const uiData = ref<UIOption>({} as UIOption)
 const bottomnav = ref()
-const showIndex = ref(true)
 const { allData, userInfo } = $(app.User)
 
 function getUiData() {
@@ -98,6 +129,27 @@ function getUiData() {
           },
         },
       })
+
+      //头部颜色
+      uni.setNavigationBarColor({
+        frontColor: pageData.headerColor.toLowerCase(),
+        backgroundColor: pageData.headerBg?.toLowerCase(),
+        animation: {
+          duration: 30,
+          timingFunc: 'linear',
+        },
+      })
+      uni.setNavigationBarTitle({
+        title: pageData.title || '',
+      })
+
+      var openCardDialog = 2
+      if (!allData.my_card_info.card_num) {
+        openCardDialog = allData.opencard_show || 2
+      }
+
+      pageData.openCardDialog = openCardDialog
+      pageData.showIndex = !allData.my_card_info.card_num && openCardDialog && !pageData.hideIndex //是否显示开卡页
       console.log(pageData)
       uiData.value = pageData
     })
@@ -107,7 +159,7 @@ function getDefaultPage() {
   let defaultIndex = app.Shop.defaultIndex
 
   let components = defaultIndex.components
-  defaultIndex.showFooter = this.data.allData.shop_index_page == 1
+  defaultIndex.showFooter = allData.shop_index_page == 1
 
   bottomnav.value = null
 
@@ -202,7 +254,7 @@ function getDefaultPage() {
   }
 
   //轮播
-  if (allData.banner_list.length > 0) {
+  if (allData.banner_list && allData.banner_list.length > 0) {
     let swiper = components.filter(c => c.name == 'swiper')[0]
     allData.banner_list.forEach(b => {
       let action =
@@ -301,11 +353,14 @@ useScroll(onPageScroll).onLoad(async page => {
 </script>
 
 <style lang="scss" scoped>
-page {
+.container {
   margin: 0;
   padding: 0;
-  height: 100%;
-  position: relative;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
   display: flex;
   flex-direction: column;
 }
@@ -377,11 +432,13 @@ opencardindex {
   background-repeat: no-repeat;
   background-position: top center;
 }
-.bottomnav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 100;
+
+.title {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
 }
 </style>
