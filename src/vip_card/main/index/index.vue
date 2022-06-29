@@ -1,5 +1,5 @@
 <template>
-  <meta title="主页" title:wx="微信端主页" navigationStyle="custom" />
+  <meta title="主页" title:wx="微信端主页" navigationStyle="custom" :enablePullDownRefresh="true" />
   <div class="container">
     <uni-nav-bar
       v-if="!uiData.hideTitle"
@@ -345,10 +345,17 @@ function getDefaultPage() {
   return defaultIndex
 }
 
-useScroll(onPageScroll).onLoad(async page => {
-  app.info('页面加载', `第${page.num}页`)
+onLoad(() => {
+  getUiData()
+})
+
+onPullDownRefresh(async () => {
+  uni.showNavigationBarLoading()
+  await app.User.login()
   await getUiData()
-  page.endSuccess(1, false)
+
+  uni.stopPullDownRefresh()
+  uni.hideNavigationBarLoading()
 })
 </script>
 
@@ -356,11 +363,8 @@ useScroll(onPageScroll).onLoad(async page => {
 .container {
   margin: 0;
   padding: 0;
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
+  height: 100vh;
+
   display: flex;
   flex-direction: column;
 }
@@ -369,42 +373,12 @@ useScroll(onPageScroll).onLoad(async page => {
   position: relative;
   z-index: 10;
   width: 100%;
-  overflow: hidden;
+
   background-position: center;
   background-repeat: no-repeat;
   box-sizing: border-box;
   flex: 1;
   overflow-y: auto;
-}
-
-.page-container.opencard {
-  display: flex;
-  flex-direction: column;
-}
-
-.page-item {
-  position: relative;
-}
-
-.loading {
-  position: fixed;
-  top: -90rpx;
-  left: -90rpx;
-  right: -90rpx;
-  bottom: -90rpx;
-  z-index: 100000;
-  background: rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10rpx);
-}
-
-.loading image {
-  position: absolute;
-  width: 80px;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
 }
 
 opencardindex {
