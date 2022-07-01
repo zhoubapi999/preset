@@ -83,7 +83,6 @@
     "vite-plugin-inspect": "^0.3.15",
     "vite-plugin-restart": "^0.1.1",
     "vite-plugin-vue-setup-extend": "^0.4.0",
-    "vite-uni-await-onlaunch": "^0.0.2",
     "vitest": "^0.7.10"
   },
   "config": {

@@ -44,7 +44,14 @@
         :style="{ backgroundImage: 'url(' + uiData.opencardbg + ')' }"
       ></div>
     </div>
-    <HdBottomNav v-if="bottomnav && !uiData.showIndex" :config="bottomnav"></HdBottomNav>
+    <div v-if="loading" class="loading">
+      <image mode="aspectFit" :src="shopInfo.miniapp_loading_img"></image>
+    </div>
+    <HdBottomNav
+      v-if="bottomnav && !uiData.showIndex"
+      :config="bottomnav"
+      @action="actionHandler"
+    ></HdBottomNav>
     <!-- 旧导航栏 -->
     <HdOldBottomNav v-if="uiData.showFooter && !uiData.showIndex"></HdOldBottomNav>
   </div>
@@ -56,9 +63,11 @@ import HdMemberInfo from '../../../components/hdui/HdMemberInfo.vue'
 import HdCopyRight from '@/components/hdui/HdCopyRight.vue'
 const uiData = ref<UIOption>({} as UIOption)
 const bottomnav = ref()
-const { allData, userInfo } = $(app.User)
+let loading = $ref(false)
+const { allData, userInfo, shopInfo } = $(app.User)
 
 function getUiData() {
+  loading = true
   return app
     .request({
       url: 'a/api/?s=/miniapp/diy/index_page&op=get',
@@ -152,6 +161,9 @@ function getUiData() {
       pageData.showIndex = !allData.my_card_info.card_num && openCardDialog && !pageData.hideIndex //是否显示开卡页
       console.log(pageData)
       uiData.value = pageData
+    })
+    .finally(() => {
+      loading = false
     })
 }
 
@@ -343,6 +355,216 @@ function getDefaultPage() {
   })
 
   return defaultIndex
+}
+
+/**
+ * 处理跳转动作
+ */
+function actionHandler(action) {
+  console.log(toRaw(action))
+  let url = '' // action.url截取掉？之后的副本
+  if (
+    action.url &&
+    action.url.indexOf('?') != -1 &&
+    action.url.indexOf('/vip_card/pages/mall/mall') == -1
+  ) {
+    url = action.url.split('?')[0]
+  } else {
+    url = action.url
+  }
+  //限制非会员的功能
+  if (!allData.my_card_info.card_num && this.noLoginUrls.indexOf(url) > -1) {
+    this.setData({
+      createCardTipDialog: true,
+    })
+    let dialog = this.selectComponent('#openCardDialog')
+    dialog.showModal()
+    return
+  } else if (!allData || !allData.shop_info.id) {
+    return
+  }
+
+  if (typeof action == 'object') {
+    switch (action.type) {
+      case 'inner':
+      case 'nav': {
+        //底部导航栏和内部跳转
+        if (action.url) {
+          if (
+            !allData.my_card_info.card_num &&
+            action.url === '/vip_card/main/index/opencard/personal'
+          ) {
+            app.getUserProfile().then(userInfo => {
+              let my_card_info = allData.my_card_info
+              userInfo.isVip = !(!my_card_info.card_num && my_card_info.id > 0)
+              uni.navigateTo({
+                url:
+                  '/vip_card/main/index/opencard/personal?wechatUserInfo=' +
+                  encodeURI(JSON.stringify(userInfo)),
+              })
+              return
+            })
+          } else {
+            uni.navigateTo({
+              url: action.url,
+              fail(e) {
+                console.log(e)
+              },
+            })
+          }
+        }
+        break
+      }
+
+      case 'freeinner': {
+        //跳转内部
+        if (action.url) {
+          if (!action.url.startsWith('/')) {
+            action.url = '/' + action.url
+          }
+          if (action.url.indexOf('vip_card/pages/mall/goods_detail') > -1) {
+            uni.navigateTo({
+              url: `/vip_card/pages/mall/mall?` + action.url.split('?')[1],
+              fail(e) {
+                console.log(e)
+              },
+            })
+          } else {
+            uni.navigateTo({
+              url: action.url,
+              fail(e) {
+                console.log(e)
+              },
+            })
+          }
+        }
+        break
+      }
+
+      case 'http': {
+        //跳转网页
+        if (action.url)
+          uni.navigateTo({
+            url: `/vip_card/pages/web/index?web_url=${encodeURIComponent(
+              action.url,
+            )}&action=${encodeURIComponent(JSON.stringify(action))}`, //跳转页面的路径，可带参数 ？隔开，不同参数用 & 分隔；相对路径，不需要.wxml后缀
+            fail(e) {
+              console.log(e)
+            }, //成功后的回调；
+          })
+        break
+      }
+      case 'action': {
+        //首页方法(action.url)
+        this[action.url](action)
+        break
+      }
+      case 'scancode': {
+        //首页方法(action.url)
+        setTimeout(() => {
+          uni.scanCode({
+            onlyFromCamera: true,
+            scanType: [],
+            success: res => {
+              if (res.errMsg == 'scanCode:ok') {
+                let path = res.path
+                if (!path.startsWith('/')) {
+                  path = '/' + path
+                }
+                uni.navigateTo({
+                  url: path,
+                  fail(e) {
+                    uni.showToast({
+                      title: '错误二维码',
+                      icon: 'none',
+                      duration: 1500,
+                    })
+                  },
+                })
+              }
+            },
+            fail: res => {},
+            complete: res => {
+              // 接口调用结束
+              console.log(res)
+            },
+          })
+        }, 600)
+        break
+      }
+      case 'product': {
+        //跳转商品详情
+        //vip_card/pages/mall/goods_detail?scene=delivery_mall&goodsId=729&shop_id=4
+        uni.navigateTo({
+          url: `/vip_card/pages/mall/mall?scene=${action.scene}&goodsId=${action.product.id}`,
+          fail(e) {
+            console.log(e)
+          },
+        })
+        break
+      }
+      case 'extre': {
+        //跳转小程序
+        if (action.url) {
+          uni.navigateToMiniProgram({
+            appId: action.appid, //小程序appid
+            path: action.url, //跳转关联小程序app.json配置里面的地址
+            //**重点**要打开的小程序版本，有效值 develop（开发版），trial（体验版），release（正式版）
+            envVersion: 'release',
+            fail(res) {
+              console.log(res)
+              //errMsg
+              uni.showToast({
+                icon: 'none',
+                duration: 1000,
+                title: res.errMsg,
+              })
+            },
+          })
+        }
+        break
+      }
+      case 'product_cate': {
+        uni.navigateTo({
+          url: `/vip_card/pages/mall/mall?scene=delivery_mall&cateId=${action.cateId}&brand_mall=`,
+          fail(e) {
+            console.log(e)
+          },
+        })
+        break
+      }
+      case 'brand_mall_search': {
+        uni.navigateTo({
+          url: `/vip_card/pages/mall/mall_search?brand_mall=false&scene=delivery_mall`,
+          fail(e) {
+            console.log(e)
+          },
+        })
+        break
+      }
+      case 'brand_mall_cart': {
+        uni.navigateTo({
+          url: `/vip_card/main/index/cart/cart?scene=delivery_mall&brand_mall=true`,
+          fail(e) {
+            console.log(e)
+          },
+        })
+
+        break
+      }
+      case 'shopcate': {
+        uni.navigateTo({
+          url: `/vip_card/pages/mall/mall?scene=${action.scene}&cateId=${action.shop_cate}&brand_mall=`,
+          fail(e) {
+            console.log(e)
+          },
+        })
+        break
+      }
+      default:
+        break
+    }
+  }
 }
 
 onLoad(() => {

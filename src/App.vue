@@ -18,6 +18,7 @@ onShow(opt => {
 page {
   background: #fff;
   font-family: -apple-system-font, 'Helvetica Neue', sans-serif;
+  font-size: 28rpx;
   color: #333;
 
   --mall: #54ccbf;

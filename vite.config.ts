@@ -12,7 +12,7 @@ import Espower from './build/vite-plugin-espower'
 import Define from './build/vite-plugin-define'
 import { visualizer } from 'rollup-plugin-visualizer'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
-import AwaitOnlaunch from 'vite-uni-await-onlaunch'
+import AwaitOnlaunch from './build/vite-uni-await-onlaunch'
 import ImportsConfig from './build/imports.config'
 
 // https://vitejs.dev/config/
@@ -49,10 +49,7 @@ export default defineConfig({
     visualizer(), //可视化依赖关系
     VueSetupExtend(), // setup 组件名称注入
     AwaitOnlaunch({
-      pagesRE: /src[\/\\]vip_card[\/\\]((?!.+(component(s)?|static).+).)*\.vue$/,
-      fn: () => {
-        return app.User.checkLogin()
-      },
+      fn: () => app.User.checkLogin(),
     }),
   ],
   esbuild: { keepNames: true },

@@ -4,9 +4,9 @@ import { PropType } from 'vue'
 const props = defineProps({
   config: { type: Object as PropType<ConfigOption>, required: true },
 })
+const emit = defineEmits(['action'])
 
 const { allData } = $(app.User)
-
 const style = computed(() => {
   const { style } = props.config
   return {
@@ -25,10 +25,6 @@ const style = computed(() => {
       : '',
   }
 })
-
-function action(item) {
-  console.log(toRaw(item))
-}
 </script>
 
 <template>
@@ -38,7 +34,7 @@ function action(item) {
       :key="index"
       class="item"
       :style="{ color: config.style.color }"
-      @click="action(item)"
+      @click="emit('action', item.action)"
     >
       <div
         class="nav-item-icon"
