@@ -1,4 +1,3 @@
-/// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import path from 'path'
 import uni from '@dcloudio/vite-plugin-uni'

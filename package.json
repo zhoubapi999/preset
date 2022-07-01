@@ -8,7 +8,6 @@
     "build:h5": "uni build",
     "build:mp-weixin": "uni build -p mp-weixin",
     "build:app": "uni build -p app",
-    "test": "vitest",
     "commit": "cz",
     "upgrade:template": "echo '将模板合并到当前分支...' ; git remote add template https://github.com/4chao/preset.git ; git fetch template && git merge template/master -m '🥝 upgrade: template'",
     "prepare": "husky install",
@@ -82,8 +81,7 @@
     "vite": "^2.7.13",
     "vite-plugin-inspect": "^0.3.15",
     "vite-plugin-restart": "^0.1.1",
-    "vite-plugin-vue-setup-extend": "^0.4.0",
-    "vitest": "^0.7.10"
+    "vite-plugin-vue-setup-extend": "^0.4.0"
   },
   "config": {
     "commitizen": {

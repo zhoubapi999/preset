@@ -55,7 +55,6 @@
 - 🛺 自动路由 - 全自动化构建 pages.json 文件
 - ⚛️ 原子 css - 并且支持小程序使用 Attributify 风格
 - 🧰 超多 utils - 工具函数加快开发效率
-- 🤹‍♂️ 超爽单测 - vitest + power-assert, 最简单的 assert, 最极致的享受
 - 🍍 装饰器 Pinia - 让你的 store 更简洁
 - 🥷 杀手级别的跳转 - 像使用 Promise 一样使用页面路由，传值回调应有尽有
 
