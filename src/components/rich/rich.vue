@@ -11,6 +11,7 @@ const emit = defineEmits(['close'])
 
 const richShow = ref(prop.show)
 function close() {
+  console.log('关闭')
   richShow.value = false
   emit('close')
 }
@@ -24,7 +25,7 @@ function close() {
           <rich-text class="ql-editor" :nodes="content"></rich-text>
         </div>
       </div>
-      <div class="icon-thin-close" @clcik="close"></div>
+      <div class="icon-thin-close" @clcik="close">123</div>
     </div>
   </div>
 </template>

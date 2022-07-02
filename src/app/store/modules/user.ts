@@ -45,7 +45,7 @@ export class User extends Pinia {
         success: async res => {
           return app
             .request({
-              url: '../../web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=login_auto',
+              url: 'web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=login_auto',
               method: 'GET',
               data: {
                 code: res.code,
@@ -72,6 +72,18 @@ export class User extends Pinia {
   }
 
   async login() {
+    // h5登录信息先写死
+    //#ifdef H5
+    if (process.env.NODE_ENV === 'development') {
+      this.loginInfo = {
+        openid: 'oxMXr4scYh1amK_IOZ0748B4ExoI',
+        session_key: 'FYyrRCnq8isjdUxOX9QFjg==',
+        unionid: 'o9w2I1IlMPkelWtQa5Px7Uc6lbso',
+        version_code: 0,
+      }
+    }
+    //#endif
+
     if (!this.loginInfo.openid) {
       await this.getLoginInfo()
     }
@@ -86,7 +98,7 @@ export class User extends Pinia {
   async getShopInfo() {
     return app
       .request({
-        url: 'a/api/index.php?s=/miniapp/shop/get_shop_data',
+        url: 'addons/vip_card/a/api/index.php?s=/miniapp/shop/get_shop_data',
         data: {
           cardmanage: true,
           condensation_code: '',
@@ -102,7 +114,7 @@ export class User extends Pinia {
   async getUserInfo() {
     return app
       .request({
-        url: '../../web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=login',
+        url: 'web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=login',
         method: 'GET',
         data: {},
       })
@@ -114,7 +126,7 @@ export class User extends Pinia {
   async getAllData() {
     return app
       .request({
-        url: '../../web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=index',
+        url: '/web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=index',
         method: 'GET',
         data: {},
       })

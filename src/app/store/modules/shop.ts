@@ -248,7 +248,7 @@ export class Shop extends Pinia {
   async getShopList(latitude?: number | string, longitude?: number | string) {
     return app
       .request({
-        url: '../../web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=entity_store',
+        url: '/web/index.php?t=0&v=v6.3.9.05&from=wxapp&c=entry&a=wxapp&m=vip_card&do=entity_store',
         data: {
           version: 'v2',
           op: 'index_list',

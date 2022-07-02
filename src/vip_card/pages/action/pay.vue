@@ -77,7 +77,7 @@
 <script setup lang="ts">
 let firstRecharge = $ref(false)
 let rechargeData = $ref({} as any)
-let display = $ref('dialog' as 'dialog' | 'block')
+let display = $ref('block' as 'dialog' | 'block')
 let couponList = $ref([])
 let { shopInfo, userInfo } = $(app.User)
 let selectItem = $ref({ id: 'custom', cash: 0, give_cash: 0, give_coupon_list_id: [], point: 0 })
@@ -85,7 +85,7 @@ let selectItem = $ref({ id: 'custom', cash: 0, give_cash: 0, give_coupon_list_id
 function checkIsfirstRecharge() {
   return app
     .request({
-      url: 'b/public/index.php?s=/miniapp/user/check_user_is_first_recharge',
+      url: 'addons/vip_card/b/public/index.php?s=/miniapp/user/check_user_is_first_recharge',
       data: {},
     })
     .then(res => {
@@ -98,7 +98,7 @@ function checkIsfirstRecharge() {
 function getRechargeData() {
   return app
     .request({
-      url: 'b/public/index.php?s=/miniapp/recharge/get_recharge_rule',
+      url: 'addons/vip_card/b/public/index.php?s=/miniapp/recharge/get_recharge_rule',
       data: {},
     })
     .then(res => {
@@ -138,7 +138,7 @@ function clickItem(item) {
 function getCoupons(cash) {
   return app
     .request({
-      url: 'a/api/index.php?s=/miniapp/coupon/get_recharge_give_coupon_list',
+      url: 'addons/vip_card/a/api/index.php?s=/miniapp/coupon/get_recharge_give_coupon_list',
       data: {
         recharge_amount: cash,
       },

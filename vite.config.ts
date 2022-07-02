@@ -29,7 +29,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://one.vipcard.shop/addons/vip_card/',
+        target: 'https://one.vipcard.shop/',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, ''), // 不可以省略rewrite
       },

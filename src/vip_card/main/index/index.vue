@@ -70,7 +70,7 @@ function getUiData() {
   loading = true
   return app
     .request({
-      url: 'a/api/?s=/miniapp/diy/index_page&op=get',
+      url: 'addons/vip_card/a/api/?s=/miniapp/diy/index_page&op=get',
       data: {},
     })
     .then(res => {

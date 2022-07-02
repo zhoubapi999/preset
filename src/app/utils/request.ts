@@ -1,8 +1,8 @@
 import initJson from '@/app/config'
 import { pickBy, isNil } from 'lodash'
 const base_url = {
-  PROD: `https://${initJson.siteroot}/addons/vip_card/`, // 生产环境地址
-  DEV: `https://${initJson.siteroot}/addons/vip_card/`, // 开发环境地址
+  PROD: `https://${initJson.siteroot}/`, // 生产环境地址
+  DEV: `https://${initJson.siteroot}/`, // 开发环境地址
 }
 //#ifdef H5
 if (process.env.NODE_ENV === 'development') base_url.DEV = '/api/'
@@ -14,6 +14,7 @@ interface Option {
   data?: object
   header?: string
   loading?: boolean
+  loadingText?: string
 }
 
 interface Response<T = any> {
@@ -45,15 +46,16 @@ function request<T = Response>(obj: Option): Promise<T> {
   obj.header = obj.header || 'application/x-www-form-urlencoded'
   obj.loading = obj.loading !== false
   let token = '' // 登录获得的 token
-  let loadingStatus = true
-  setTimeout(() => {
-    if (loadingStatus && obj.loading) {
-      uni.showLoading({
-        title: '加载中',
-        mask: true,
-      })
-    }
-  }, 800) // 800h毫秒后如果loadingStatus === false 则表示请求返回了，不显示loading
+  let loadingCount = 0
+
+  if (obj.loading) {
+    uni.showLoading({
+      title: obj.loadingText || '加载中...',
+      mask: true,
+    })
+    loadingCount++
+  }
+
   return new Promise((resolve, reject) => {
     uni.request({
       url: (process.env.NODE_ENV === 'development' ? base_url.DEV : base_url.PROD) + obj.url,
@@ -90,8 +92,8 @@ function request<T = Response>(obj: Option): Promise<T> {
         }
       },
       complete: () => {
-        if (loadingStatus && obj.loading) uni.hideLoading()
-        loadingStatus = false
+        loadingCount > 0 && loadingCount--
+        if (loadingCount === 0 && obj.loading) uni.hideLoading()
       },
     })
   })
