@@ -67,7 +67,8 @@
         <rich
           :content="firstRecharge ? rechargeData.first_recharge_desc : rechargeData.content_pay"
           :display="display"
-          @close="display = 'block'"
+          title="充值说明"
+          @confirm="display = 'block'"
         />
       </div>
     </div>
@@ -77,7 +78,7 @@
 <script setup lang="ts">
 let firstRecharge = $ref(false)
 let rechargeData = $ref({} as any)
-let display = $ref('block' as 'dialog' | 'block')
+let display = $ref('none' as 'none' | 'dialog' | 'block')
 let couponList = $ref([])
 let { shopInfo, userInfo } = $(app.User)
 let selectItem = $ref({ id: 'custom', cash: 0, give_cash: 0, give_coupon_list_id: [], point: 0 })
@@ -122,6 +123,7 @@ function getRechargeData() {
         }
       } catch (error) {}
       rechargeData = res.data
+      display = 'dialog'
     })
 }
 

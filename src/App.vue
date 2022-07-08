@@ -1,6 +1,5 @@
 <script setup lang="ts">
-onLaunch(() => {})
-onShow(opt => {
+onLaunch(opt => {
   // 门店id
   if (opt.query.shop_id) {
     app.User.shopInfo.id = Number(opt.query.shop_id)

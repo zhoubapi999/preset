@@ -13,6 +13,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import AwaitOnlaunch from './build/vite-uni-await-onlaunch'
 import ImportsConfig from './build/imports.config'
+import MiniProgramTailwind from '@dcasia/mini-program-tailwind-webpack-plugin/rollup'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -50,10 +51,10 @@ export default defineConfig({
     AwaitOnlaunch({
       fn: () => app.User.checkLogin(),
     }),
+    MiniProgramTailwind(),
   ],
   esbuild: { keepNames: true },
   optimizeDeps: { exclude: ['lodash-es'] },
-  test: { globals: true, environment: 'jsdom', deps: { inline: ['@vue'] } },
 })
 
 function isTest() {
