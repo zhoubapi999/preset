@@ -61,7 +61,7 @@ function loadList() {
   let { cates } = props.config
   return app
     .request({
-      url: 'a/api/?s=/miniapp/diy/by_goods_id_get_goods',
+      url: 'addons/vip_card/a/api/?s=/miniapp/diy/by_goods_id_get_goods',
       data: {
         goods_ids: JSON.stringify(cates[idx.value]?.products),
       },

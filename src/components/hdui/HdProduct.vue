@@ -49,7 +49,7 @@ const contentStyle = computed(() => {
 function loadList() {
   return app
     .request({
-      url: 'a/api/?s=/miniapp/diy/goods_list',
+      url: 'addons/vip_card/a/api/?s=/miniapp/diy/goods_list',
       data: {
         scene: props.config.type,
       },

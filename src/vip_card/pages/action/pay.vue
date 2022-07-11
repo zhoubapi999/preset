@@ -17,7 +17,7 @@
           <input
             v-if="item.id === 'custom'"
             class="w-full h-full text-center text-36"
-            type="text"
+            type="digit"
             placeholder="其它金额"
           />
           <div v-else class="flex-center-col">

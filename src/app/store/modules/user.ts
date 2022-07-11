@@ -18,6 +18,7 @@ export class User extends Pinia {
     name: '',
     address: '',
     pic_url: '',
+    miniapp_loading_img: '',
   }
 
   @Persist

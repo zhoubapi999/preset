@@ -54,6 +54,9 @@
     ></HdBottomNav>
     <!-- 旧导航栏 -->
     <HdOldBottomNav v-if="uiData.showFooter && !uiData.showIndex"></HdOldBottomNav>
+    <!-- 开屏广告 -->
+    <HdAd v-if="loading === false" @action="actionHandler"></HdAd>
+    <HdBirthday></HdBirthday>
   </div>
 </template>
 
@@ -63,7 +66,7 @@ import HdMemberInfo from '../../../components/hdui/HdMemberInfo.vue'
 import HdCopyRight from '@/components/hdui/HdCopyRight.vue'
 const uiData = ref<UIOption>({} as UIOption)
 const bottomnav = ref()
-let loading = $ref(false)
+let loading = $ref<null | boolean>(null)
 const { allData, userInfo, shopInfo } = $(app.User)
 
 function getUiData() {
@@ -231,39 +234,7 @@ function getDefaultPage() {
   }
 
   //旧版 URL 转换
-  var oldUrlMap = {
-    super_home: '/vip_card/pages/index/super_home',
-    shop: '/vip_card/pages/points/list',
-    '../coupon/tuangou_coupon_list': '/vip_card/pages/coupon/tuangou_coupon_list',
-    '../coupon/my_service_list': '/vip_card/pages/coupon/my_service_list',
-    '../coupon/coupon_list': '/vip_card/pages/coupon/collect_coupon_center',
-    '../coupon/coupon_list?show_list_type=3':
-      '/vip_card/pages/coupon/collect_coupon_center?show_list_type=3',
-    'vip_card/main/index/shop': '/vip_card/pages/points/list',
-    '../my_integral/my_integral': '/vip_card/pages/my_integral/my_integral',
-    '../card/personal': '/vip_card/main/index/opencard/personal',
-    '../action/privilege': '/vip_card/pages/action/privilege',
-    '../coupon/coupon_list?show_list_type=1':
-      '/vip_card/pages/coupon/my_coupon_list?show_list_type=1',
-    '../pay_record/index': '/vip_card/pages/pay_record/index',
-    '../wifi/index': '/vip_card/pages/wifi/index',
-    '../action/pay': '/vip_card/pages/action/pay',
-    '../card/list': '/vip_card/pages/card/list',
-    '../vgoods/vgoods': '/vip_card/pages/mall/mall?scene=self_mall',
-    '../qrcode/index': {
-      //二维码
-      type: 'action',
-      url: 'qrcode',
-    },
-    contact_us: {
-      type: 'action',
-      url: 'contactUs',
-    },
-    shop_detail: {
-      type: 'action',
-      url: 'shopDetail',
-    },
-  }
+  var { oldUrlMap } = app.Shop
 
   //轮播
   if (allData.banner_list && allData.banner_list.length > 0) {

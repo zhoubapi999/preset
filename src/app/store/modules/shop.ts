@@ -244,6 +244,41 @@ export class Shop extends Pinia {
     ],
   }
 
+  // 旧版url
+  oldUrlMap = {
+    super_home: '/vip_card/pages/index/super_home',
+    shop: '/vip_card/pages/points/list',
+    '../coupon/tuangou_coupon_list': '/vip_card/pages/coupon/tuangou_coupon_list',
+    '../coupon/my_service_list': '/vip_card/pages/coupon/my_service_list',
+    '../coupon/coupon_list': '/vip_card/pages/coupon/collect_coupon_center',
+    '../coupon/coupon_list?show_list_type=3':
+      '/vip_card/pages/coupon/collect_coupon_center?show_list_type=3',
+    'vip_card/main/index/shop': '/vip_card/pages/points/list',
+    '../my_integral/my_integral': '/vip_card/pages/my_integral/my_integral',
+    '../card/personal': '/vip_card/main/index/opencard/personal',
+    '../action/privilege': '/vip_card/pages/action/privilege',
+    '../coupon/coupon_list?show_list_type=1':
+      '/vip_card/pages/coupon/my_coupon_list?show_list_type=1',
+    '../pay_record/index': '/vip_card/pages/pay_record/index',
+    '../wifi/index': '/vip_card/pages/wifi/index',
+    '../action/pay': '/vip_card/pages/action/pay',
+    '../card/list': '/vip_card/pages/card/list',
+    '../vgoods/vgoods': '/vip_card/pages/mall/mall?scene=self_mall',
+    '../qrcode/index': {
+      //二维码
+      type: 'action',
+      url: 'qrcode',
+    },
+    contact_us: {
+      type: 'action',
+      url: 'contactUs',
+    },
+    shop_detail: {
+      type: 'action',
+      url: 'shopDetail',
+    },
+  }
+
   // 门店列表
   async getShopList(latitude?: number | string, longitude?: number | string) {
     return app
