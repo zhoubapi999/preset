@@ -18,14 +18,5 @@ export default defineConfig({
     'flex-center': 'flex flex-row justify-center items-center',
     'flex-center-col': 'flex flex-col justify-center items-center',
   },
-  postprocess: [
-    // 小程序不需要属性选择器
-    process.env.UNI_PLATFORM?.startsWith('mp') &&
-      (util => {
-        if (!util.selector.startsWith('[')) return
-        util.selector = undefined
-        util.entries = []
-      }),
-  ].filter(e => !!e),
   include: [path.resolve(__dirname, 'src', '**')],
 })

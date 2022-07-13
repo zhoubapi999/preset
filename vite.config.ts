@@ -15,6 +15,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 
 import ImportsConfig from './build/imports.config'
+import uniTwuCssPlugin from './build/vite-plugin-uni-twucss'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -39,6 +40,7 @@ export default defineConfig({
     Define(), //添加一些全局变量
     visualizer(), //可视化依赖关系
     VueSetupExtend(), // setup 组件名称注入
+    uniTwuCssPlugin(),
   ],
   esbuild: { keepNames: true },
   optimizeDeps: { exclude: ['lodash-es'] },

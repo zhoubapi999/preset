@@ -5,7 +5,7 @@
       <div class="icon" i-ri-leaf-fill inline-block></div>
     </div>
     <p>
-      <em text-sm opacity-75>快速，优雅的全栈预设模板</em>
+      <em text-sm>快速，优雅的全栈预设模板</em>
     </p>
     <div py-25>
       <uni-easyinput v-model="name" placeholder="你的名字?" />
@@ -17,8 +17,8 @@
         开冲
       </div>
     </div>
-    <p text-sm opacity-75>打开F12进入移动端视图</p>
-    <p text-sm opacity-75>向下滑动体验下拉刷新</p>
+    <p text-sm>打开F12进入移动端视图</p>
+    <p text-sm>向下滑动体验下拉刷新</p>
   </div>
 </template>
 
