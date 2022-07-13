@@ -6,6 +6,7 @@ import Unocss from 'unocss/vite'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import AwaitOnlaunch from './build/vite-uni-await-onlaunch'
 import ImportsConfig from './build/imports.config'
+import uniTwuCssPlugin from './build/vite-plugin-uni-twucss'
 import MiniProgramTailwind from '@dcasia/mini-program-tailwind-webpack-plugin/rollup'
 
 // https://vitejs.dev/config/
@@ -38,6 +39,7 @@ export default defineConfig({
       fn: () => app.User.checkLogin(),
     }),
     MiniProgramTailwind(),
+    uniTwuCssPlugin(),
   ],
   esbuild: { keepNames: true },
   optimizeDeps: { exclude: ['lodash-es'] },

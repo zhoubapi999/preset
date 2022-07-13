@@ -4,8 +4,8 @@
       <div class="icon" i-ri-compasses-2-line inline-block mrsm></div>
       Hi {{ data.name || '匿名同学' }}
     </div>
-    <p text-sm opacity-75>也可以往回传值哦</p>
-    <p text-sm opacity-75>尝试填入内容点击返回↓</p>
+    <p text-sm>也可以往回传值哦</p>
+    <p text-sm>尝试填入内容点击返回↓</p>
     <div py-25>
       <uni-easyinput v-model="text" placeholder="输入返回值" />
     </div>
