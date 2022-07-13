@@ -1,6 +1,5 @@
 import { App as VueApp } from 'vue'
 import store from './store'
-import server from './server'
 import preset from './preset'
 
 export const app = {
@@ -17,7 +16,6 @@ export const appPlugin = {
     vueApp.config.globalProperties.app = app
     vueApp.config.globalProperties.uni = uni
     vueApp.use(store)
-    vueApp.use(server)
     let sum = ''
     Object.entries(import.meta.globEager('./utils/*.ts')).forEach(([k, v]) => {
       let name = k.replace(/^\.\/utils\//, '')

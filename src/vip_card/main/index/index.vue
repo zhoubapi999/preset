@@ -1,5 +1,4 @@
 <template>
-  <meta title="主页" title:wx="微信端主页" navigationStyle="custom" :enablePullDownRefresh="true" />
   <div class="container">
     <uni-nav-bar
       v-if="!uiData.hideTitle"

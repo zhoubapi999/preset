@@ -17,23 +17,7 @@ export default defineConfig({
   shortcuts: {
     'flex-center': 'flex flex-row justify-center items-center',
     'flex-center-col': 'flex flex-col justify-center items-center',
+    'fixed-bottom': 'fixed bottom-0 left-0 right-0',
   },
-  postprocess: [
-    // 小程序不需要属性选择器
-    process.env.UNI_PLATFORM?.startsWith('mp') &&
-      (util => {
-        if (!util.selector.startsWith('[')) return
-        util.selector = undefined
-        util.entries = []
-      }),
-  ].filter(e => !!e),
   include: [path.resolve(__dirname, 'src', '**')],
-  extract: {
-    // 忽略部分文件夹
-    exclude: ['node_modules', '.git', 'dist'],
-  },
-  corePlugins: {
-    // 禁用掉在小程序环境中不可能用到的 plugins
-    container: false,
-  },
 })

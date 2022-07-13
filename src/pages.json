@@ -1,0 +1,49 @@
+{
+  "pages": [
+    {
+      "path": "vip_card/main/index/index",
+      "style": {
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "vip_card/main/action/payment",
+      "style": {
+        "navigationBarTitleText": "付款"
+      }
+    },
+    {
+      "path": "vip_card/main/index/hi",
+      "style": {
+        "navigationBarTitleText": "hi页面"
+      }
+    }
+  ],
+  "subPackages": [
+    {
+      "root": "vip_card/pages",
+      "pages": [
+        {
+          "path": "action/pay",
+          "style": {
+            "navigationBarTitleText": "活动"
+          }
+        }
+      ]
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^sys$": "@/sys.vue",
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+      "^Hd(.*)": "@/components/hdui/Hd$1.vue"
+    }
+  }
+}

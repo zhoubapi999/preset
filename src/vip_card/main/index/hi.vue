@@ -1,5 +1,4 @@
 <template>
-  <meta title="hi页面" />
   <div flex-center-col pt100>
     <div text-4xl py-25 flex-center>
       <div class="icon" i-ri-compasses-2-line inline-block mrsm></div>
